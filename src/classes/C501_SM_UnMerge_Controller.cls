@@ -66,7 +66,7 @@ public class C501_SM_UnMerge_Controller {
 
         Map<Id, Contact> newContacts = new Map<Id, Contact>();
         List<C501_Service_Contact__c> updateServiceContacts = new List<C501_Service_Contact__C>();
-        firstRecordSkipped = true;
+        firstRecordSkipped = false;
         for (C501_Service_Household__c serviceHousehold :serviceHouseholds) {
             if (!firstRecordSkipped) {
                 firstRecordSkipped = true;
