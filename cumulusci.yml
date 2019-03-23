@@ -1,0 +1,7 @@
+project:
+    name: Salesforce-Bulk-MergeNPSP-ServiceManagement
+    package:
+        name:  Salesforce-Bulk-MergeNPSP-ServiceManagement
+        api_version: '43.0'
+
+

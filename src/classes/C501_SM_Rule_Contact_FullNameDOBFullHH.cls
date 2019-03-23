@@ -1,0 +1,150 @@
+//
+// Run Code FROM Developer Console
+//  1) Debug -> Open Execute Anonymous Window
+//  2) paste code
+/*
+      C501_SM_Rule_Contact_FullNameDOBFullHH schedule = new C501_SM_Rule_Contact_FullNameDOBFullHH();
+      schedule.execute(null);
+*/
+//  3) click Execute
+//
+
+global class C501_SM_Rule_Contact_FullNameDOBFullHH implements Schedulable {
+
+    global void execute(SchedulableContext SC) {
+
+        system.debug('***** C501_SM_Rule_Contact_FullNameDOBFullHH:execute');
+
+		//
+		// Perform all SOQL Queries outside of loop to avoid Salesforce Governor Limits: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm
+		//
+
+        String mergeMetricName = 'Contact_FullNameDOBFullHH';
+
+        // Get Merge Metric
+        List<C501_Merge_Metric__c> mergeMetrics = [
+            SELECT Id, Name, Confidence__c, Total_Merge__c,
+                Enable__c, Enabled_Programs__c,
+                AutoMerge_Percentage__c, Enabled_AutoMerge_Programs__c
+            FROM C501_Merge_Metric__c
+            WHERE Name = :mergeMetricName];
+        if (mergeMetrics.isEmpty()) {
+            mergeMetrics.add( new C501_Merge_Metric__c (
+                Name = mergeMetricName,
+                Confidence__c = 100.0
+            ));
+
+            insert mergeMetrics;
+        }
+
+        if (!mergeMetrics[0].Enable__c || String.isEmpty(mergeMetrics[0].Enabled_Programs__c)) {
+            return;
+        }
+
+        Date dateUnder18 = date.today().addYears(-18);
+        List<String> programs = mergeMetrics[0].Enabled_Programs__c.split(';');
+        system.debug('***** C501_SM_Rule_Contact_FullNameDOBFullHH:execute - Enabled_Programs__c: ' + String.valueOf(programs));
+
+        //
+        // Testing in Workbench tips
+        //
+        //      and C501_Birthdate__c <> null and C501_Birthdate__c < 2000-01-01
+        //      and C501_Service_Household_Id__r.C501_Program__c in ('Energy Assistance','Housing Pool')
+        // add LIMIT 10 at the end
+
+		AggregateResult[] allAggregatedByServiceContacts = [
+            SELECT Count(C501_Service_Household_Id__r.C501_Household__c),
+                C501_Birthdate__c,
+                C501_Gender__c,
+                C501_First_Name__c,
+                C501_Last_Name__c,
+                MAX(C501_Service_Household_Id__r.C501_Household__c)MaxAccountId,
+                MIN(C501_Service_Household_Id__r.C501_Household__c)MinAccountId
+            FROM C501_Service_Contact__c
+            WHERE C501_First_Name__c <> ''
+                and C501_Last_Name__c <> ''
+                and C501_Birthdate__c <> null and C501_Birthdate__c < :dateUnder18
+                and C501_Service_Household_Id__r.C501_Program__c in :programs
+            GROUP BY C501_First_Name__c,
+                C501_Last_Name__c,
+                C501_Birthdate__c,
+                C501_Gender__c
+            HAVING Count(C501_Service_Household_Id__r.C501_Household__c) > 1
+            ORDER BY Count(C501_Service_Household_Id__r.C501_Household__c) DESC];
+
+        Set<Id> mergeAccountIds = new Set<Id>();
+        String minId, maxId, contactMatchId;
+        for (AggregateResult result : allAggregatedByServiceContacts)  {
+            
+            system.debug(string.valueOf(result));
+
+            maxId = result.get('MaxAccountId').toString();
+            minId = result.get('MinAccountId').toString();
+
+            if (String.isEmpty(maxId) || String.isEmpty(minId) || maxId == minId) {
+                continue;
+            }
+
+            mergeAccountIds.add(maxId);
+            mergeAccountIds.add(minId);
+        }
+
+        List<Contact> contacts = [
+            SELECT AccountId, FirstName, LastName, Birthdate, Gender__c
+            FROM Contact
+            WHERE AccountId in :mergeAccountIds
+            ORDER BY AccountId, FirstName, LastName, Birthdate, Gender__c DESC];
+
+        if (contacts.isEmpty()) {
+            return;
+        }
+
+        Map<Id,String> accountContacts = new Map<Id,String>();
+        for (Contact contactInfo :contacts) {
+            String contactsInfo;
+            if (accountContacts.containsKey(contactInfo.AccountId)) {
+                contactsInfo = accountContacts.remove(contactInfo.AccountId);
+            }
+
+            contactsInfo += contactInfo.FirstName + contactInfo.LastName + contactinfo.Birthdate + contactInfo.Gender__c;
+            accountContacts.put(contactInfo.AccountId, contactsInfo);
+        }
+
+        Map<String, C501_Account_Merge__c> mergeAccounts = new Map<String, C501_Account_Merge__c>();
+        String uniqueId;
+        for (AggregateResult result : allAggregatedByServiceContacts)  {
+            maxId = result.get('MaxAccountId').toString();
+            minId = result.get('MinAccountId').toString();
+
+            if (String.isEmpty(maxId) || String.isEmpty(minId) || maxId == minId) {
+                continue;
+            }
+
+            if (!mergeAccountIds.contains(maxId) || !mergeAccountIds.contains(minId) || !accountContacts.containsKey(maxId) || !accountContacts.containsKey(minId)) {
+                continue;
+            }
+
+            if (accountContacts.get(maxId) <> accountContacts.get(minId)) {
+                continue;
+            }
+
+            contactMatchId = result.get('C501_Last_Name__c').toString() + 
+                result.get('C501_First_Name__c').toString() +
+                result.get('C501_Gender__c').toString() +
+                result.get('C501_Birthdate__c').toString();
+
+            uniqueId = mergeMetricName + maxId + minId;
+            mergeAccounts.put(uniqueId, new C501_Account_Merge__c(
+                Unique_Id__c = uniqueId,
+                Merge_Confidence__c = mergeMetrics[0].Confidence__c,
+                Account__c = minId,
+                Merge_Target_Account__c = maxId,
+                Merge_Metric__c = mergeMetrics[0].Id,
+                Contact_Match_Id__c = contactMatchId
+            ));
+        }
+
+        C501_MassMerge_SharedCode c501MassMerge_SharedCode = new C501_MassMerge_SharedCode();
+        c501MassMerge_SharedCode.ProcessMergeCandidates(mergeMetrics[0], mergeAccounts.values());
+   }
+}

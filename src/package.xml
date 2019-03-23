@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>C501_SM_Rule_Contact_FullNameDOBFullHH</members>
+        <members>C501_SM_Rule_Contact_NameDOB</members>
+        <members>C501_SM_Rule_Contact_NameDOBService</members>
+        <members>C501_SM_Rule_TEST</members>
+        <members>C501_SM_UnMerge_Controller</members>
+        <members>C501_SM_UnMerge_Controller_TEST</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>C501_Merge_Metric__c.Enabled_Programs__c</members>
+        <members>C501_Merge_Metric__c.Enabled_AutoMerge_Programs__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>C501_Merge_Metric__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>C501_Merge_Metric__c-Merge Metric SM Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>C501_SM_UnMerge</members>
+        <name>ApexPage</name>
+    </types>
+    <version>42.0</version>
+</Package>

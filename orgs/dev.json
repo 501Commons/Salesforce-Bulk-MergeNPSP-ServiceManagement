@@ -1,0 +1,10 @@
+{
+  "orgName": "Salesforce-Bulk-MergeNPSP-ServiceManagement - Dev Org",
+  "edition": "Developer",
+  "orgPreferences" : {
+    "enabled": [
+      "S1DesktopEnabled",
+      "ChatterEnabled"
+    ]
+  }
+}

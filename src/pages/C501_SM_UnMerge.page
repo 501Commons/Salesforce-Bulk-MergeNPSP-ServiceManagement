@@ -1,0 +1,6 @@
+<apex:page standardController="Account" extensions="C501_SM_UnMerge_Controller" action="{!autoRun}">
+    <apex:sectionHeader title="Auto-Running UnMerge Process"/>
+    <apex:outputPanel >
+        Error: UnMerge failed
+    </apex:outputPanel>
+</apex:page>
