@@ -10,8 +10,12 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>C501_Merge_Metric__c.Enabled_Programs__c</members>
+        <members>C501_SM_UnMerge</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
         <members>C501_Merge_Metric__c.Enabled_AutoMerge_Programs__c</members>
+        <members>C501_Merge_Metric__c.Enabled_Programs__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -19,12 +23,13 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>Account-C501 Household SM Lightning Layout</members>
         <members>C501_Merge_Metric__c-Merge Metric SM Layout</members>
         <name>Layout</name>
     </types>
     <types>
-        <members>C501_SM_UnMerge</members>
-        <name>ApexPage</name>
+        <members>Account.UnMerge_Household</members>
+        <name>WebLink</name>
     </types>
     <version>42.0</version>
 </Package>

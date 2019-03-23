@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <webLinks>
+        <fullName>UnMerge_Household</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>UnMerge Household</masterLabel>
+        <openType>sidebar</openType>
+        <page>C501_SM_UnMerge</page>
+        <protected>false</protected>
+    </webLinks>
+</CustomObject>
