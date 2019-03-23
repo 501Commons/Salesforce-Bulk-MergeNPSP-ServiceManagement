@@ -3,8 +3,8 @@
 //  1) Debug -> Open Execute Anonymous Window
 //  2) paste code
 /*
-    C501_SM_Rule_Contact_NameDOBService schedule = new C501_SM_Rule_Contact_NameDOBService();
-    schedule.execute(null);
+    C501_SM_Rule_Contact_NameDOBService contactNameDOBService = new C501_SM_Rule_Contact_NameDOBService();
+    contactNameDOBService.execute(null);
 */
 //  3) click Execute
 //
@@ -79,7 +79,7 @@ global class C501_SM_Rule_Contact_NameDOBService implements Schedulable {
             WHERE C501_FirstName_Initial__c <> ''
                 and C501_Last_Name__c <> ''
                 and C501_Service_Household_Id__r.C501_Start_Date__c <> null
-                and C501_Birthdate__c <> null and C501_Birthdate__c < :dateUnder18
+                and C501_Birthdate__c <> null and C501_Birthdate__c <= :dateUnder18
                 and C501_Service_Household_Id__r.C501_Program__c in :programs
             GROUP BY C501_FirstName_Initial__c,
                 C501_Last_Name__c,

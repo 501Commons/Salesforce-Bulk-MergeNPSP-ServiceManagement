@@ -35,8 +35,8 @@ private with sharing class C501_SM_Rule_TEST {
         C501_MassMerge_SharedCode c501MassMerge_SharedCode = new C501_MassMerge_SharedCode();
         c501MassMerge_SharedCode.TestSetupMerge();
 
-        C501_SM_Rule_Contact_FullNameDOBFullHH scheduleFullNameDOBFullHH = new C501_SM_Rule_Contact_FullNameDOBFullHH();
-        scheduleFullNameDOBFullHH.execute(null);
+        C501_SM_Rule_Contact_NameDOBFullHH scheduleNameDOBFullHH = new C501_SM_Rule_Contact_NameDOBFullHH();
+        scheduleNameDOBFullHH.execute(null);
 
         C501_SM_Rule_Contact_NameDOB scheduleNameDOB = new C501_SM_Rule_Contact_NameDOB();
         scheduleNameDOB.execute(null);
@@ -76,8 +76,8 @@ private with sharing class C501_SM_Rule_TEST {
 
         update accountMerges;
 
-        C501_SM_Rule_Contact_FullNameDOBFullHH scheduleFullNameDOBFullHH = new C501_SM_Rule_Contact_FullNameDOBFullHH();
-        scheduleFullNameDOBFullHH.execute(null);
+        C501_SM_Rule_Contact_NameDOBFullHH scheduleNameDOBFullHH = new C501_SM_Rule_Contact_NameDOBFullHH();
+        scheduleNameDOBFullHH.execute(null);
 
         C501_SM_Rule_Contact_NameDOB scheduleNameDOB = new C501_SM_Rule_Contact_NameDOB();
         scheduleNameDOB.execute(null);

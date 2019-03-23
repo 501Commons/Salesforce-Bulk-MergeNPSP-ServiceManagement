@@ -3,23 +3,23 @@
 //  1) Debug -> Open Execute Anonymous Window
 //  2) paste code
 /*
-      C501_SM_Rule_Contact_FullNameDOBFullHH schedule = new C501_SM_Rule_Contact_FullNameDOBFullHH();
-      schedule.execute(null);
+      C501_SM_Rule_Contact_NameDOBFullHH NameDOBFullHH = new C501_SM_Rule_Contact_NameDOBFullHH();
+      NameDOBFullHH.execute(null);
 */
 //  3) click Execute
 //
 
-global class C501_SM_Rule_Contact_FullNameDOBFullHH implements Schedulable {
+global class C501_SM_Rule_Contact_NameDOBFullHH implements Schedulable {
 
     global void execute(SchedulableContext SC) {
 
-        system.debug('***** C501_SM_Rule_Contact_FullNameDOBFullHH:execute');
+        system.debug('***** C501_SM_Rule_Contact_NameDOBFullHH:execute');
 
 		//
 		// Perform all SOQL Queries outside of loop to avoid Salesforce Governor Limits: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm
 		//
 
-        String mergeMetricName = 'Contact_FullNameDOBFullHH';
+        String mergeMetricName = 'Contact_NameDOBFullHH';
 
         // Get Merge Metric
         List<C501_Merge_Metric__c> mergeMetrics = [
@@ -41,9 +41,8 @@ global class C501_SM_Rule_Contact_FullNameDOBFullHH implements Schedulable {
             return;
         }
 
-        Date dateUnder18 = date.today().addYears(-18);
         List<String> programs = mergeMetrics[0].Enabled_Programs__c.split(';');
-        system.debug('***** C501_SM_Rule_Contact_FullNameDOBFullHH:execute - Enabled_Programs__c: ' + String.valueOf(programs));
+        system.debug('***** C501_SM_Rule_Contact_NameDOBFullHH:execute - Enabled_Programs__c: ' + String.valueOf(programs));
 
         //
         // Testing in Workbench tips
@@ -56,16 +55,16 @@ global class C501_SM_Rule_Contact_FullNameDOBFullHH implements Schedulable {
             SELECT Count(C501_Service_Household_Id__r.C501_Household__c),
                 C501_Birthdate__c,
                 C501_Gender__c,
-                C501_First_Name__c,
+                C501_FirstName_Initial__c,
                 C501_Last_Name__c,
                 MAX(C501_Service_Household_Id__r.C501_Household__c)MaxAccountId,
                 MIN(C501_Service_Household_Id__r.C501_Household__c)MinAccountId
             FROM C501_Service_Contact__c
-            WHERE C501_First_Name__c <> ''
-                and C501_Last_Name__c <> ''
-                and C501_Birthdate__c <> null and C501_Birthdate__c < :dateUnder18
+            WHERE C501_FirstName_Initial__c <> null
+                and C501_Last_Name__c <> null
+                and C501_Birthdate__c <> null
                 and C501_Service_Household_Id__r.C501_Program__c in :programs
-            GROUP BY C501_First_Name__c,
+            GROUP BY C501_FirstName_Initial__c,
                 C501_Last_Name__c,
                 C501_Birthdate__c,
                 C501_Gender__c
@@ -73,7 +72,7 @@ global class C501_SM_Rule_Contact_FullNameDOBFullHH implements Schedulable {
             ORDER BY Count(C501_Service_Household_Id__r.C501_Household__c) DESC];
 
         Set<Id> mergeAccountIds = new Set<Id>();
-        String minId, maxId, contactMatchId;
+        String minId, maxId;
         for (AggregateResult result : allAggregatedByServiceContacts)  {
             
             system.debug(string.valueOf(result));
@@ -92,7 +91,7 @@ global class C501_SM_Rule_Contact_FullNameDOBFullHH implements Schedulable {
         List<Contact> contacts = [
             SELECT AccountId, FirstName, LastName, Birthdate, Gender__c
             FROM Contact
-            WHERE AccountId in :mergeAccountIds
+            WHERE AccountId in :mergeAccountIds and FirstName <> null and Birthdate <> null and Gender__c <> null
             ORDER BY AccountId, FirstName, LastName, Birthdate, Gender__c DESC];
 
         if (contacts.isEmpty()) {
@@ -106,12 +105,12 @@ global class C501_SM_Rule_Contact_FullNameDOBFullHH implements Schedulable {
                 contactsInfo = accountContacts.remove(contactInfo.AccountId);
             }
 
-            contactsInfo += contactInfo.FirstName + contactInfo.LastName + contactinfo.Birthdate + contactInfo.Gender__c;
+            contactsInfo += contactInfo.FirstName.mid(1,1) + contactInfo.LastName + contactinfo.Birthdate + contactInfo.Gender__c;
             accountContacts.put(contactInfo.AccountId, contactsInfo);
         }
 
         Map<String, C501_Account_Merge__c> mergeAccounts = new Map<String, C501_Account_Merge__c>();
-        String uniqueId;
+        String uniqueId, contactMatchId;
         for (AggregateResult result : allAggregatedByServiceContacts)  {
             maxId = result.get('MaxAccountId').toString();
             minId = result.get('MinAccountId').toString();
@@ -124,12 +123,13 @@ global class C501_SM_Rule_Contact_FullNameDOBFullHH implements Schedulable {
                 continue;
             }
 
+            // Validate Contacts same between both accounts
             if (accountContacts.get(maxId) <> accountContacts.get(minId)) {
                 continue;
             }
 
             contactMatchId = result.get('C501_Last_Name__c').toString() + 
-                result.get('C501_First_Name__c').toString() +
+                result.get('C501_FirstName_Initial__c').toString() +
                 result.get('C501_Gender__c').toString() +
                 result.get('C501_Birthdate__c').toString();
 
