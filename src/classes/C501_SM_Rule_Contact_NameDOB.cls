@@ -19,7 +19,7 @@ global class C501_SM_Rule_Contact_NameDOB implements Schedulable {
 		// Perform all SOQL Queries outside of loop to avoid Salesforce Governor Limits: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm
 		//
 
-        String mergeMetricName = 'Contact_NameDOB';
+        String mergeMetricName = 'SM_Contact_NameDOB';
 
         // Get Merge Metric
         List<C501_Merge_Metric__c> mergeMetrics = [
@@ -31,7 +31,9 @@ global class C501_SM_Rule_Contact_NameDOB implements Schedulable {
         if (mergeMetrics.isEmpty()) {
             mergeMetrics.add( new C501_Merge_Metric__c (
                 Name = mergeMetricName,
-                Confidence__c = 90.0
+                Confidence__c = 90.0,
+                AutoMerge_Percentage__c = 0.0,
+                Description__c = 'FirstName Initial, LastName, Birthdate, and Gender must match between 2 Service Contacts on different Service Households only for Service Households where the Program is in the list of Enabled Programs on the rule.'
             ));
 
             insert mergeMetrics;
@@ -39,6 +41,13 @@ global class C501_SM_Rule_Contact_NameDOB implements Schedulable {
 
         if (!mergeMetrics[0].Enable__c || String.isEmpty(mergeMetrics[0].Enabled_Programs__c)) {
             return;
+        }
+
+        List<CronJobDetail> cronJobs = [
+            SELECT Id,JobType,Name FROM CronJobDetail WHERE Name = :mergeMetricName];
+        if (cronJobs.isEmpty()) {
+            // Schedule to run daily at 1am
+            system.schedule(mergeMetricName, '0 0 1 * * ?', new C501_SM_Rule_Contact_NameDOB());
         }
 
         Date dateUnder18 = date.today().addYears(-18);
