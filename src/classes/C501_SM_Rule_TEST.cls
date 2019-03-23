@@ -68,13 +68,7 @@ private with sharing class C501_SM_Rule_TEST {
 
     private static testmethod void MergeRemoveNotCandidateTests() {
 
-        List<C501_Account_Merge__c> accountMerges = [select Id, Contact_Match_Id__c from C501_Account_Merge__c];
-
-        for (C501_Account_Merge__c accountMerge :accountMerges) {
-            accountMerge.Contact_Match_Id__c = accountMerge.Id;
-        }
-
-        update accountMerges;
+        List<C501_Account_Merge__c> accountMerges = [select Id from C501_Account_Merge__c];
 
         C501_SM_Rule_Contact_NameDOBFullHH scheduleNameDOBFullHH = new C501_SM_Rule_Contact_NameDOBFullHH();
         scheduleNameDOBFullHH.execute(null);

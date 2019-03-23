@@ -119,7 +119,7 @@ global class C501_SM_Rule_Contact_NameDOBFullHH implements Schedulable {
         }
 
         Map<String, C501_Account_Merge__c> mergeAccounts = new Map<String, C501_Account_Merge__c>();
-        String uniqueId, contactMatchId;
+        String uniqueId;
         for (AggregateResult result : allAggregatedByServiceContacts)  {
             maxId = result.get('MaxAccountId').toString();
             minId = result.get('MinAccountId').toString();
@@ -137,19 +137,13 @@ global class C501_SM_Rule_Contact_NameDOBFullHH implements Schedulable {
                 continue;
             }
 
-            contactMatchId = result.get('C501_Last_Name__c').toString() + 
-                result.get('C501_FirstName_Initial__c').toString() +
-                result.get('C501_Gender__c').toString() +
-                result.get('C501_Birthdate__c').toString();
-
             uniqueId = mergeMetricName + maxId + minId;
             mergeAccounts.put(uniqueId, new C501_Account_Merge__c(
                 Unique_Id__c = uniqueId,
                 Merge_Confidence__c = mergeMetrics[0].Confidence__c,
                 Account__c = minId,
                 Merge_Target_Account__c = maxId,
-                Merge_Metric__c = mergeMetrics[0].Id,
-                Contact_Match_Id__c = contactMatchId
+                Merge_Metric__c = mergeMetrics[0].Id
             ));
         }
 
