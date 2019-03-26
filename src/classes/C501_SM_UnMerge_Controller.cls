@@ -10,10 +10,13 @@ public class C501_SM_UnMerge_Controller {
 
         // Perform UnMerge
         Boolean firstRecordSkipped = false;
-        List<C501_Service_Household__c> serviceHouseholds = [
-            SELECT Id, Name, C501_Household__c
-            FROM C501_Service_Household__c
-            WHERE C501_Household__c = :this.unmergeAccount.Id];
+
+        // Ignore Change Requests and Service Households that do not have any Service Contacts
+        String strSoql = 'SELECT Id, Name, C501_Household__c';
+        strSoql += ' FROM C501_Service_Household__c';
+        strSoql += ' WHERE C501_Household__c = :this.unmergeAccount.Id and (NOT Name like \'Change Request%\') and C501_Household_Size__c >= 1.0';
+        strSoql += ' ORDER BY C501_Start_Date__c DESC';
+        List<C501_Service_Household__c> serviceHouseholds = Database.Query(strSoql);
 
         List<Id> serviceHouseholdIds = new List<Id>();
         for (C501_Service_Household__c serviceHousehold :serviceHouseholds) {
