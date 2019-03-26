@@ -10,11 +10,12 @@ public class C501_SM_UnMerge_Controller {
 
         // Perform UnMerge
         Boolean firstRecordSkipped = false;
+        Id unMergeAccountId = this.unmergeAccount.Id;
 
         // Ignore Change Requests and Service Households that do not have any Service Contacts
         String strSoql = 'SELECT Id, Name, C501_Household__c';
         strSoql += ' FROM C501_Service_Household__c';
-        strSoql += ' WHERE C501_Household__c = :this.unmergeAccount.Id and (NOT Name like \'Change Request%\') and C501_Household_Size__c >= 1.0';
+        strSoql += ' WHERE C501_Household__c = :unMergeAccountId and (NOT Name like \'Change Request%\') and C501_Household_Size__c >= 1.0';
         strSoql += ' ORDER BY C501_Start_Date__c DESC';
         List<C501_Service_Household__c> serviceHouseholds = Database.Query(strSoql);
 
@@ -25,7 +26,7 @@ public class C501_SM_UnMerge_Controller {
 
         Map<Id, List<C501_Service_Contact__c>> serviceContacts = new Map<Id, List<C501_Service_Contact__c>>();
         for (C501_Service_Contact__c serviceContact : [
-            SELECT Id, C501_Last_Name__c, C501_Service_Household_Id__c
+            SELECT Id, C501_Last_Name__c, C501_Service_Household_Id__c, C501_Contact__c
             FROM C501_Service_Contact__c
             WHERE C501_Service_Household_Id__c in :serviceHouseholdIds]) {
 
@@ -97,10 +98,14 @@ public class C501_SM_UnMerge_Controller {
             insert newContacts.values();
         }
 
+        Map<Id, Id> changedContactIds = new Map<Id, Id>();
         for (List<C501_Service_Contact__c> serviceContactsById :serviceContacts.values()) {
             for (C501_Service_Contact__c serviceContact : serviceContactsById) {
                 updateServiceContacts.add(serviceContact);
                 if (newContacts.containsKey(serviceContact.Id)) {
+                    if (serviceContact.C501_Contact__c != null) {
+                        changedContactIds.put(serviceContact.C501_Contact__c, newContacts.get(serviceContact.Id).Id);
+                    }
                     serviceContact.C501_Contact__c = newContacts.get(serviceContact.Id).Id;
                 }
             }
@@ -108,6 +113,20 @@ public class C501_SM_UnMerge_Controller {
 
         if (!updateServiceContacts.isEmpty()) {
             update updateServiceContacts;
+        }
+
+        // Check to merge any Contacts that no longer have a Service Contact record
+        if (!changedContactIds.isEmpty()) {
+            for (C501_Service_Contact__c contactReferenced : [
+                SELECT C501_Contact__c
+                FROM C501_Service_Contact__c
+                WHERE C501_Contact__c in :changedContactIds.keySet()]) {
+                    changedContactIds.remove(contactReferenced.C501_Contact__c);
+                }
+        }
+
+        for (Id contactId :changedContactIds.keySet()) {
+            Database.merge(new Contact(Id = changedContactIds.get(contactId)), new Contact (Id = contactId), false);
         }
 
         // Trigger reload original account page
