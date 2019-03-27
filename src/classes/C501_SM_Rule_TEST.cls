@@ -58,10 +58,12 @@ private with sharing class C501_SM_Rule_TEST {
         // Create Account Merges
         scheduleNameDOB.execute(null);
         scheduleNameDOBService.execute(null);
+        scheduleNameDOBFullHH.execute(null);
 
         // Attempt to create Account Merges again
         scheduleNameDOB.execute(null);
         scheduleNameDOBService.execute(null);
+        scheduleNameDOBFullHH.execute(null);
     }
 
     //==================== TEST METHOD(s) ======================================
