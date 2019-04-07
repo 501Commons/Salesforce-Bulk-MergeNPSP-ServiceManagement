@@ -2,8 +2,18 @@ global with sharing class C501_SM_SharedCode {
 
     global void ScheduleJobs(C501_Merge_Metric__c mergeMetric) {
 
-        // Offset by 2 to stagger with Merge NPSP rules
-        Integer hourlyOffset = 2;
+        // Hourly Offset to try to avoid rules running at the same time
+        Integer hourlyOffset = 0;
+        if (mergeMetric.Name == 'SM_Contact_NameDOB') {
+            hourlyOffset = 1;
+        }
+        else if (mergeMetric.Name == 'SM_Contact_NameDOBFullHH') {
+            hourlyOffset = 2;
+        }
+        else if (mergeMetric.Name == 'SM_Contact_NameDOBService') {
+            hourlyOffset = 4;
+        }
+
         Boolean hourlySyncOnly = false;
 
         if (mergeMetric.AutoMerge_Percentage__c == null || mergeMetric.AutoMerge_Percentage__c <= 0.0 || ((mergeMetric.Total_Unassigned_Accounts__c + mergeMetric.Total_Unassigned_Contacts__c) < 100)) {
@@ -17,10 +27,10 @@ global with sharing class C501_SM_SharedCode {
         for (CronJobDetail jobDetail :cronJobDetails) {
 
             // Check for hourly trigger
-            if (jobDetail.Name.equals(mergeMetric.Name + '_' + String.valueOf(hourlyOffset))) {
+            if (jobDetail.Name.equals(mergeMetric.Name + '_0')) {
                 foundHourlySyncTrigger = true;
             }
-            else if (jobDetail.Name.startsWith(mergeMetric.Name)) {
+            else if (jobDetail.Name.startsWith(mergeMetric.Name + '_')) {
 
                 foundAdditionalSyncTriggers = true;
                 if (hourlySyncOnly) {
@@ -42,9 +52,10 @@ global with sharing class C501_SM_SharedCode {
             // Salesforce only supports hourly not minute interval format 0 0/5 00 for s m h not supported which is every 5 minutes
             String cronExpression, mergeMetricNameSchedule;
 
+            Integer triggerNumber = 0;
             for (integer i = hourlyOffset; i <= 59; i += 5) {
                 cronExpression = '0 ' + String.valueOf(i) + ' * * * ?';
-                mergeMetricNameSchedule = mergeMetric.Name + '_' + String.valueOf(i);
+                mergeMetricNameSchedule = mergeMetric.Name + '_' + String.valueOf(triggerNumber++);
 
                 // Check if Hourly Sync Trigger already created
                 if (foundHourlySyncTrigger && i == hourlyOffset) {
