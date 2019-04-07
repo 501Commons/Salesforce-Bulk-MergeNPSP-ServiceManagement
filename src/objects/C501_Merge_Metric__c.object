@@ -193,6 +193,7 @@
         <fullName>All</fullName>
         <columns>NAME</columns>
         <columns>Total_Merge_Accounts__c</columns>
+        <columns>Total_Merge_Contacts__c</columns>
         <columns>Total_Unassigned_Accounts__c</columns>
         <columns>Total_Unassigned_Contacts__c</columns>
         <columns>Enable__c</columns>
