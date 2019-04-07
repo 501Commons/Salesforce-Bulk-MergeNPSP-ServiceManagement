@@ -43,7 +43,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Total_Merge__c</field>
+                <field>Total_Merge_Accounts__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Total_Merge_Contacts__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>

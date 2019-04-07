@@ -26,7 +26,7 @@ global class C501_SM_Rule_Contact_NameDOBFullHH implements Schedulable {
             SELECT
                 Enabled_Programs__c,
                 Id, Name, Confidence__c,
-                Total_Merge__c, Total_Unassigned_Accounts__c, Total_Unassigned_Contacts__c,
+                Total_Merge_Accounts__c, Total_Merge_Contacts__c, Total_Unassigned_Accounts__c, Total_Unassigned_Contacts__c,
                 Enable__c,
                 AutoMerge_Percentage__c, AutoMerge_Objects__c
             FROM C501_Merge_Metric__c

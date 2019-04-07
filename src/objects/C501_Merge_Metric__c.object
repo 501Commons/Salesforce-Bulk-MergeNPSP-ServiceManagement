@@ -144,9 +144,20 @@
         <type>Summary</type>
     </fields>
     <fields>
-        <fullName>Total_Merge__c</fullName>
+        <fullName>Total_Merge_Accounts__c</fullName>
         <externalId>false</externalId>
-        <label>Total Merge</label>
+        <label>Total Merge Accounts</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Merge_Contacts__c</fullName>
+        <externalId>false</externalId>
+        <label>Total Merge Contacts</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
@@ -181,7 +192,7 @@
     <listViews>
         <fullName>All</fullName>
         <columns>NAME</columns>
-        <columns>Total_Merge__c</columns>
+        <columns>Total_Merge_Accounts__c</columns>
         <columns>Total_Unassigned_Accounts__c</columns>
         <columns>Total_Unassigned_Contacts__c</columns>
         <columns>Enable__c</columns>
