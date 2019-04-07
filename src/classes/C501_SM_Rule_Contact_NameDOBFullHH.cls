@@ -25,7 +25,7 @@ global class C501_SM_Rule_Contact_NameDOBFullHH implements Schedulable {
         List<C501_Merge_Metric__c> mergeMetrics = [
             SELECT Id, Name, Confidence__c, Total_Merge__c,
                 Enable__c, Enabled_Programs__c,
-                AutoMerge_Percentage__c, Enabled_AutoMerge_Programs__c
+                AutoMerge_Percentage__c
             FROM C501_Merge_Metric__c
             WHERE Name = :mergeMetricName];
         if (mergeMetrics.isEmpty()) {
@@ -43,12 +43,8 @@ global class C501_SM_Rule_Contact_NameDOBFullHH implements Schedulable {
             return;
         }
 
-        List<CronJobDetail> cronJobs = [
-            SELECT Id,JobType,Name FROM CronJobDetail WHERE Name = :mergeMetricName];
-        if (cronJobs.isEmpty()) {
-            // Schedule to run daily at 2am
-            system.schedule(mergeMetricName, '0 0 2 * * ?', new C501_SM_Rule_Contact_NameDOBFullHH());
-        }
+        C501_SM_SharedCode c501_SM_SharedCode = new C501_SM_SharedCode();
+        c501_SM_SharedCode.ScheduleJobs();
 
         List<String> programs = mergeMetrics[0].Enabled_Programs__c.split(';');
         system.debug('***** C501_SM_Rule_Contact_NameDOBFullHH:execute - Enabled_Programs__c: ' + String.valueOf(programs));
@@ -84,8 +80,6 @@ global class C501_SM_Rule_Contact_NameDOBFullHH implements Schedulable {
         String minId, maxId;
         for (AggregateResult result : allAggregatedByServiceContacts)  {
             
-            system.debug(string.valueOf(result));
-
             maxId = result.get('MaxAccountId').toString();
             minId = result.get('MinAccountId').toString();
 
@@ -100,7 +94,11 @@ global class C501_SM_Rule_Contact_NameDOBFullHH implements Schedulable {
         List<Contact> contacts = [
             SELECT AccountId, FirstName, LastName, Birthdate, Gender__c
             FROM Contact
-            WHERE AccountId in :mergeAccountIds and FirstName <> null and Birthdate <> null and Gender__c <> null
+            WHERE
+                AccountId in :mergeAccountIds
+                and FirstName <> null 
+                and Birthdate <> null 
+                and Gender__c <> null
             ORDER BY AccountId, FirstName, LastName, Birthdate, Gender__c DESC];
 
         if (contacts.isEmpty()) {

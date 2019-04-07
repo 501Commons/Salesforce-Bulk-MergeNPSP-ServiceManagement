@@ -63,19 +63,6 @@
         <type>Percent</type>
     </fields>
     <fields>
-        <fullName>AutoMerge_Programs__c</fullName>
-        <externalId>false</externalId>
-        <label>AutoMerge Programs</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>MultiselectPicklist</type>
-        <valueSet>
-            <restricted>true</restricted>
-            <valueSetName>C501_Intake_Programs</valueSetName>
-        </valueSet>
-        <visibleLines>4</visibleLines>
-    </fields>
-    <fields>
         <fullName>Confidence__c</fullName>
         <description>Confidence percentage for potential merge candidates found by this rule.</description>
         <externalId>false</externalId>
@@ -102,20 +89,6 @@
         <label>Enable</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
-    </fields>
-    <fields>
-        <fullName>Enabled_AutoMerge_Programs__c</fullName>
-        <description>Which Programs are enabled for automerging.</description>
-        <externalId>false</externalId>
-        <label>Enabled AutoMerge Programs</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>MultiselectPicklist</type>
-        <valueSet>
-            <restricted>true</restricted>
-            <valueSetName>C501_Intake_Programs</valueSetName>
-        </valueSet>
-        <visibleLines>4</visibleLines>
     </fields>
     <fields>
         <fullName>Enabled_Programs__c</fullName>
@@ -179,7 +152,6 @@
         <columns>Enabled_Programs__c</columns>
         <columns>Confidence__c</columns>
         <columns>AutoMerge_Percentage__c</columns>
-        <columns>Enabled_AutoMerge_Programs__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>

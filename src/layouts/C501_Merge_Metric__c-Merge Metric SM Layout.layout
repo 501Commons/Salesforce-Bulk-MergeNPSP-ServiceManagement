@@ -58,10 +58,6 @@
                 <behavior>Edit</behavior>
                 <field>AutoMerge_Percentage__c</field>
             </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Enabled_AutoMerge_Programs__c</field>
-            </layoutItems>
         </layoutColumns>
         <layoutColumns/>
         <style>TwoColumnsLeftToRight</style>

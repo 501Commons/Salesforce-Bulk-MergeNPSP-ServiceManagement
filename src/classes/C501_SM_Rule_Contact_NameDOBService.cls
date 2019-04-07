@@ -45,8 +45,7 @@ global class C501_SM_Rule_Contact_NameDOBService implements Schedulable {
         List<C501_Merge_Metric__c> mergeMetrics = [
             SELECT Id, Name, Confidence__c, Total_Merge__c,
                 Enable__c, Enabled_Programs__c,
-                AutoMerge_Percentage__c,
-                Enabled_AutoMerge_Programs__c
+                AutoMerge_Percentage__c
             FROM C501_Merge_Metric__c
             WHERE Name = :mergeMetricName];
         if (mergeMetrics.isEmpty()) {
@@ -64,12 +63,8 @@ global class C501_SM_Rule_Contact_NameDOBService implements Schedulable {
             return;
         }
 
-        List<CronJobDetail> cronJobs = [
-            SELECT Id,JobType,Name FROM CronJobDetail WHERE Name = :mergeMetricName];
-        if (cronJobs.isEmpty()) {
-            // Schedule to run daily at 3am
-            system.schedule(mergeMetricName, '0 0 3 * * ?', new C501_SM_Rule_Contact_NameDOBService());
-        }
+        C501_SM_SharedCode c501_SM_SharedCode = new C501_SM_SharedCode();
+        c501_SM_SharedCode.ScheduleJobs();
 
         Date dateUnder18 = date.today().addYears(-18);
         List<String> programs = mergeMetrics[0].Enabled_Programs__c.split(';');

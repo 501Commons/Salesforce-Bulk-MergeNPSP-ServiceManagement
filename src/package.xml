@@ -5,6 +5,7 @@
         <members>C501_SM_Rule_Contact_NameDOBFullHH</members>
         <members>C501_SM_Rule_Contact_NameDOBService</members>
         <members>C501_SM_Rule_TEST</members>
+        <members>C501_SM_SharedCode</members>
         <members>C501_SM_UnMerge_Controller</members>
         <members>C501_SM_UnMerge_Controller_TEST</members>
         <name>ApexClass</name>
@@ -14,7 +15,6 @@
         <name>ApexPage</name>
     </types>
     <types>
-        <members>C501_Merge_Metric__c.Enabled_AutoMerge_Programs__c</members>
         <members>C501_Merge_Metric__c.Enabled_Programs__c</members>
         <name>CustomField</name>
     </types>
