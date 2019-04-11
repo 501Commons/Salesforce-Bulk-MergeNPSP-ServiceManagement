@@ -190,7 +190,7 @@
     </fields>
     <label>Merge Metric</label>
     <listViews>
-        <fullName>All</fullName>
+        <fullName>All_ServiceManagement</fullName>
         <columns>NAME</columns>
         <columns>Total_Merge_Accounts__c</columns>
         <columns>Total_Merge_Contacts__c</columns>
@@ -202,7 +202,7 @@
         <columns>AutoMerge_Percentage__c</columns>
         <columns>AutoMerge_Objects__c</columns>
         <filterScope>Everything</filterScope>
-        <label>All</label>
+        <label>All Service Management</label>
     </listViews>
     <listViews>
         <fullName>All1</fullName>
