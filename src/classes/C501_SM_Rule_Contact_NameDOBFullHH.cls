@@ -102,7 +102,8 @@ global class C501_SM_Rule_Contact_NameDOBFullHH implements Schedulable {
                 and FirstName <> null 
                 and Birthdate <> null 
                 and Gender__c <> null
-            ORDER BY AccountId, FirstName, LastName, Birthdate, Gender__c DESC];
+            ORDER BY AccountId, FirstName, LastName, Birthdate, Gender__c DESC
+            LIMIT 999];
 
         if (contacts.isEmpty()) {
             return;
