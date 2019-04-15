@@ -69,9 +69,14 @@
                     <label>Account</label>
                 </value>
                 <value>
-                    <fullName>Contact</fullName>
+                    <fullName>Contacts Within Account</fullName>
                     <default>false</default>
-                    <label>Contact</label>
+                    <label>Contacts Within Account</label>
+                </value>
+                <value>
+                    <fullName>Contacts Across Accounts</fullName>
+                    <default>false</default>
+                    <label>Contacts Across Accounts</label>
                 </value>
             </valueSetDefinition>
         </valueSet>
@@ -168,6 +173,36 @@
     </fields>
     <label>Merge Metric</label>
     <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Total_Unassigned_Accounts__c</columns>
+        <columns>Total_Unassigned_Contacts__c</columns>
+        <columns>Enable__c</columns>
+        <columns>Enabled_Programs__c</columns>
+        <columns>Confidence__c</columns>
+        <columns>AutoMerge_Percentage__c</columns>
+        <columns>AutoMerge_Objects__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>All1</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>All_NPSP</fullName>
+        <columns>NAME</columns>
+        <columns>Total_Unassigned_Accounts__c</columns>
+        <columns>Total_Unassigned_Contacts__c</columns>
+        <columns>Enable__c</columns>
+        <columns>Confidence__c</columns>
+        <columns>AutoMerge_Percentage__c</columns>
+        <columns>AutoMerge_Objects__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All NPSP</label>
+    </listViews>
+    <listViews>
         <fullName>All_ServiceManagement</fullName>
         <columns>NAME</columns>
         <columns>Total_Unassigned_Accounts__c</columns>
@@ -179,11 +214,6 @@
         <columns>AutoMerge_Objects__c</columns>
         <filterScope>Everything</filterScope>
         <label>All Service Management</label>
-    </listViews>
-    <listViews>
-        <fullName>All1</fullName>
-        <filterScope>Everything</filterScope>
-        <label>All</label>
     </listViews>
     <nameField>
         <label>Merge Metric Name</label>
