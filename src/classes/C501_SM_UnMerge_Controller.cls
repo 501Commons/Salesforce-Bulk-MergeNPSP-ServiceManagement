@@ -94,7 +94,7 @@ public class C501_SM_UnMerge_Controller {
             }
         }
 
-        if (!newContacts.isEmpty()) {
+        if (!newContacts.values().isEmpty()) {
             insert newContacts.values();
         }
 
