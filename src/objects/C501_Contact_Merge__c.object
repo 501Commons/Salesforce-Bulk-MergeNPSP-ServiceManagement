@@ -127,7 +127,7 @@
         <caseSensitive>false</caseSensitive>
         <externalId>false</externalId>
         <label>Unique Id</label>
-        <length>64</length>
+        <length>128</length>
         <required>true</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>

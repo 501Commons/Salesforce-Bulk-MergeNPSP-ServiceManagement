@@ -94,11 +94,12 @@
     </fields>
     <fields>
         <fullName>Confidence__c</fullName>
+        <defaultValue>90.0</defaultValue>
         <description>Confidence percentage for potential merge candidates found by this rule.</description>
         <externalId>false</externalId>
         <label>Confidence</label>
         <precision>18</precision>
-        <required>false</required>
+        <required>true</required>
         <scale>0</scale>
         <trackTrending>false</trackTrending>
         <type>Percent</type>
@@ -135,6 +136,51 @@
         <visibleLines>4</visibleLines>
     </fields>
     <fields>
+        <fullName>Last_Discover_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Last Discover Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Last_Merge_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Last Merge Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Source_Object__c</fullName>
+        <description>Name of the source object to query when trying to find potential merge candidates (e.g., Contact, Account)</description>
+        <externalId>false</externalId>
+        <label>Source Object</label>
+        <length>80</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Source_Report_LastModifiedDate__c</fullName>
+        <externalId>false</externalId>
+        <label>Source Report LastModifiedDate</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Source_Report__c</fullName>
+        <externalId>false</externalId>
+        <label>Source Report</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Total_Ignore__c</fullName>
         <externalId>false</externalId>
         <label>Total Ignore</label>
@@ -147,6 +193,17 @@
         <summaryOperation>count</summaryOperation>
         <trackTrending>false</trackTrending>
         <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Total_Merge__c</fullName>
+        <externalId>false</externalId>
+        <label>Total Merge</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Total_Unassigned_Accounts__c</fullName>
@@ -171,17 +228,27 @@
         <trackTrending>false</trackTrending>
         <type>Summary</type>
     </fields>
+    <fields>
+        <fullName>Total_Unassigned__c</fullName>
+        <externalId>false</externalId>
+        <label>Total Unassigned</label>
+        <summaryFilterItems>
+            <field>C501_Account_Merge__c.Merge_Action__c</field>
+            <operation>equals</operation>
+            <value></value>
+        </summaryFilterItems>
+        <summaryForeignKey>C501_Account_Merge__c.Merge_Metric__c</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
     <label>Merge Metric</label>
     <listViews>
         <fullName>All</fullName>
         <columns>NAME</columns>
-        <columns>Total_Unassigned_Accounts__c</columns>
-        <columns>Total_Unassigned_Contacts__c</columns>
         <columns>Enable__c</columns>
-        <columns>Enabled_Programs__c</columns>
         <columns>Confidence__c</columns>
         <columns>AutoMerge_Percentage__c</columns>
-        <columns>AutoMerge_Objects__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
