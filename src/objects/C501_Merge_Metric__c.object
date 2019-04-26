@@ -195,17 +195,6 @@
         <type>Summary</type>
     </fields>
     <fields>
-        <fullName>Total_Merge__c</fullName>
-        <externalId>false</externalId>
-        <label>Total Merge</label>
-        <precision>18</precision>
-        <required>false</required>
-        <scale>0</scale>
-        <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>Total_Unassigned_Accounts__c</fullName>
         <externalId>false</externalId>
         <label>Total Unassigned Accounts</label>
@@ -224,20 +213,6 @@
         <externalId>false</externalId>
         <label>Total Unassigned Contacts</label>
         <summaryForeignKey>C501_Contact_Merge__c.Merge_Metric__c</summaryForeignKey>
-        <summaryOperation>count</summaryOperation>
-        <trackTrending>false</trackTrending>
-        <type>Summary</type>
-    </fields>
-    <fields>
-        <fullName>Total_Unassigned__c</fullName>
-        <externalId>false</externalId>
-        <label>Total Unassigned</label>
-        <summaryFilterItems>
-            <field>C501_Account_Merge__c.Merge_Action__c</field>
-            <operation>equals</operation>
-            <value></value>
-        </summaryFilterItems>
-        <summaryForeignKey>C501_Account_Merge__c.Merge_Metric__c</summaryForeignKey>
         <summaryOperation>count</summaryOperation>
         <trackTrending>false</trackTrending>
         <type>Summary</type>
