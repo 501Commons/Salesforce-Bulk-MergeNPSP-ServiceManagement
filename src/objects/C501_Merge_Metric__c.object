@@ -156,7 +156,7 @@
         <description>Aggregate value to use in query to find MAX and MIN Ids for merge targets.</description>
         <externalId>false</externalId>
         <label>Source Aggregate</label>
-        <length>40</length>
+        <length>128</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
