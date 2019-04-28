@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>C501_Service_Contact__c.C501_FirstName_Initial__c</field>
+    </columns>
+    <columns>
+        <field>C501_Service_Contact__c.C501_Last_Name__c</field>
+    </columns>
+    <columns>
+        <field>C501_Service_Contact__c.C501_Birthdate__c</field>
+    </columns>
+    <columns>
+        <field>C501_Service_Contact__c.C501_Gender__c</field>
+    </columns>
+    <columns>
+        <field>FK_$C501_Service_Household__c.C501_Service__c</field>
+    </columns>
+    <description>Service Management match on Contact First Name Initial, Last Name, DOB, Gender, and Service</description>
+    <filter>
+        <criteriaItems>
+            <column>FK_$C501_Service_Household__c.C501_Program__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Energy Assistance,Early Learning,Information &amp; Referral,Housing Pool</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>SM Contact Name, DOB, Gender, Service</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$C501_Service_Contact__c@C501_Service_Contact__c.C501_Service_Household_Id__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>C501_Service_Contact__c.C501_Birthdate__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -152,6 +152,17 @@
         <type>DateTime</type>
     </fields>
     <fields>
+        <fullName>Source_Aggregate__c</fullName>
+        <description>Aggregate value to use in query to find MAX and MIN Ids for merge targets.</description>
+        <externalId>false</externalId>
+        <label>Source Aggregate</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Source_Object__c</fullName>
         <description>Name of the source object to query when trying to find potential merge candidates (e.g., Contact, Account)</description>
         <externalId>false</externalId>

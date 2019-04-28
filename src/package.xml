@@ -31,6 +31,14 @@
         <name>Layout</name>
     </types>
     <types>
+        <members>C501_Mass_Merge_Rules</members>
+        <members>C501_Mass_Merge_Templates</members>
+        <members>C501_Mass_Merge_Templates/SM_Contact_Name_DOB_Gender1</members>
+        <members>C501_Mass_Merge_Templates/SM_Contact_Name_DOB_Gender_All_HH</members>
+        <members>C501_Mass_Merge_Templates/SM_Contact_Name_DOB_Gender_Service1</members>
+        <name>Report</name>
+    </types>
+    <types>
         <members>Account.UnMerge_Household</members>
         <name>WebLink</name>
     </types>
