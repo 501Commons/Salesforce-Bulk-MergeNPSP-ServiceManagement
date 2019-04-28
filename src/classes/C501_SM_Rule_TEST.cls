@@ -48,7 +48,6 @@ private with sharing class C501_SM_Rule_TEST {
         for (C501_Merge_Metric__c mergeMetric :[SELECT Id FROM C501_Merge_Metric__c]) {
             mergeMetric.Enable__c = true;
             mergeMetric.AutoMerge_Percentage__c = 0.0;
-            mergeMetric.Enabled_Programs__c = 'Energy Assistance';
             mergeMetric.AutoMerge_Objects__c = 'Account;Contacts within Account;Contacts Across Accounts';
 
             listMergeMetrics.add(mergeMetric);

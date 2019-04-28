@@ -122,20 +122,6 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>Enabled_Programs__c</fullName>
-        <description>Which Programs are enabled for the rule to run to create potential merge candidates.</description>
-        <externalId>false</externalId>
-        <label>Enabled Programs</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>MultiselectPicklist</type>
-        <valueSet>
-            <restricted>true</restricted>
-            <valueSetName>C501_Intake_Programs</valueSetName>
-        </valueSet>
-        <visibleLines>4</visibleLines>
-    </fields>
-    <fields>
         <fullName>Last_Discover_Date__c</fullName>
         <externalId>false</externalId>
         <label>Last Discover Date</label>
@@ -254,19 +240,6 @@
         <columns>AutoMerge_Objects__c</columns>
         <filterScope>Everything</filterScope>
         <label>All NPSP</label>
-    </listViews>
-    <listViews>
-        <fullName>All_ServiceManagement</fullName>
-        <columns>NAME</columns>
-        <columns>Total_Unassigned_Accounts__c</columns>
-        <columns>Total_Unassigned_Contacts__c</columns>
-        <columns>Enable__c</columns>
-        <columns>Enabled_Programs__c</columns>
-        <columns>Confidence__c</columns>
-        <columns>AutoMerge_Percentage__c</columns>
-        <columns>AutoMerge_Objects__c</columns>
-        <filterScope>Everything</filterScope>
-        <label>All Service Management</label>
     </listViews>
     <nameField>
         <label>Merge Metric Name</label>
