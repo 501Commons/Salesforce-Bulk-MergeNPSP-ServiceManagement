@@ -29,56 +29,5 @@
 */
 
 @isTest
-private with sharing class C501_SM_Rule_TEST {
-    
-    @testSetup static void setup() {
-        C501_MassMerge_SharedCode c501MassMerge_SharedCode = new C501_MassMerge_SharedCode();
-        c501MassMerge_SharedCode.TestSetupMerge();
-
-        C501_SM_Rule_Contact_NameDOBFullHH scheduleNameDOBFullHH = new C501_SM_Rule_Contact_NameDOBFullHH();
-        scheduleNameDOBFullHH.execute(null);
-
-        C501_SM_Rule_Contact_NameDOB scheduleNameDOB = new C501_SM_Rule_Contact_NameDOB();
-        scheduleNameDOB.execute(null);
-
-        C501_SM_Rule_Contact_NameDOBService scheduleNameDOBService = new C501_SM_Rule_Contact_NameDOBService();
-        scheduleNameDOBService.execute(null);
-
-        List<C501_Merge_Metric__c> listMergeMetrics = new List<C501_Merge_Metric__c>();
-        for (C501_Merge_Metric__c mergeMetric :[SELECT Id FROM C501_Merge_Metric__c]) {
-            mergeMetric.Enable__c = true;
-            mergeMetric.AutoMerge_Percentage__c = 0.0;
-            mergeMetric.AutoMerge_Objects__c = 'Account;Contacts within Account;Contacts Across Accounts';
-
-            listMergeMetrics.add(mergeMetric);
-        }
-
-        update listMergeMetrics;
-
-        // Create Account Merges
-        scheduleNameDOB.execute(null);
-        scheduleNameDOBService.execute(null);
-        scheduleNameDOBFullHH.execute(null);
-
-        // Attempt to create Account Merges again
-        scheduleNameDOB.execute(null);
-        scheduleNameDOBService.execute(null);
-        scheduleNameDOBFullHH.execute(null);
-    }
-
-    //==================== TEST METHOD(s) ======================================
-
-    private static testmethod void MergeRemoveNotCandidateTests() {
-
-        List<C501_Account_Merge__c> accountMerges = [select Id from C501_Account_Merge__c];
-
-        C501_SM_Rule_Contact_NameDOBFullHH scheduleNameDOBFullHH = new C501_SM_Rule_Contact_NameDOBFullHH();
-        scheduleNameDOBFullHH.execute(null);
-
-        C501_SM_Rule_Contact_NameDOB scheduleNameDOB = new C501_SM_Rule_Contact_NameDOB();
-        scheduleNameDOB.execute(null);
-
-        C501_SM_Rule_Contact_NameDOBService scheduleNameDOBService = new C501_SM_Rule_Contact_NameDOBService();
-        scheduleNameDOBService.execute(null);
-    }
+private with sharing class C501_SM_Rule_TEST {    
 }
