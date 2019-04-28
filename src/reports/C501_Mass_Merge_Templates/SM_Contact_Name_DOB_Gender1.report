@@ -17,7 +17,13 @@
             <column>FK_$C501_Service_Household__c.C501_Program__c</column>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>Energy Assistance,Early Learning,Information &amp; Referral,Housing Pool</value>
+            <value>Early Learning</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>C501_Service_Contact__c.C501_Age__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>greaterOrEqual</operator>
+            <value>18</value>
         </criteriaItems>
         <language>en_US</language>
     </filter>

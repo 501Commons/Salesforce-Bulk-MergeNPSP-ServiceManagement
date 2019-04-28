@@ -12,24 +12,27 @@
     <columns>
         <field>C501_Service_Contact__c.C501_Gender__c</field>
     </columns>
-    <description>Service Management merge rule where all contacts in a household match on First Name Initial, Last Name, DOB, and Gender.</description>
+    <columns>
+        <field>FK_$C501_Service_Household__c.C501_Service__c</field>
+    </columns>
+    <description>Service Management match on Contact First Name Initial, Last Name, DOB, Gender, and Service</description>
     <filter>
         <criteriaItems>
             <column>FK_$C501_Service_Household__c.C501_Program__c</column>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>Energy Assistance,Early Learning,Housing Pool</value>
+            <value>Energy Assistance</value>
         </criteriaItems>
         <criteriaItems>
-            <column>FK_$C501_Service_Household__c.C501_Household__c</column>
+            <column>C501_Service_Contact__c.C501_Age__c</column>
             <isUnlocked>true</isUnlocked>
-            <operator>equals</operator>
-            <value>Full Contact Match</value>
+            <operator>greaterOrEqual</operator>
+            <value>18</value>
         </criteriaItems>
         <language>en_US</language>
     </filter>
     <format>Tabular</format>
-    <name>SM Contact Name, DOB, Gender, All HH</name>
+    <name>SM Contact Name, DOB, Gender, Service</name>
     <params>
         <name>co</name>
         <value>1</value>
