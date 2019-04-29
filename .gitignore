@@ -1,5 +1,6 @@
 .project
 .settings
+.vscode/settings.json
 salesforce.schema
 Referenced Packages
 salesforce-food-bank.sublime-project
