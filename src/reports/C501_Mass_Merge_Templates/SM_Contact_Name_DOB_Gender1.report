@@ -20,7 +20,7 @@
             <value>Early Learning</value>
         </criteriaItems>
         <criteriaItems>
-            <column>C501_Service_Contact__c.C501_Age__c</column>
+            <column>C501_Service_Contact__c.C501_Age_Calculate__c</column>
             <isUnlocked>true</isUnlocked>
             <operator>greaterOrEqual</operator>
             <value>18</value>

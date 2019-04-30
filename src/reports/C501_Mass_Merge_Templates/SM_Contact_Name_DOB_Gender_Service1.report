@@ -23,12 +23,6 @@
             <operator>equals</operator>
             <value>Energy Assistance</value>
         </criteriaItems>
-        <criteriaItems>
-            <column>C501_Service_Contact__c.C501_Age__c</column>
-            <isUnlocked>true</isUnlocked>
-            <operator>greaterOrEqual</operator>
-            <value>18</value>
-        </criteriaItems>
         <language>en_US</language>
     </filter>
     <format>Tabular</format>
