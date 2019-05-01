@@ -15,16 +15,6 @@
         <name>ApexPage</name>
     </types>
     <types>
-        <members>C501_Contact_Merge__c.Merge_Metric__c</members>
-        <members>C501_Merge_Metric__c.Total_Unassigned_Contacts__c</members>
-        <name>CustomField</name>
-    </types>
-    <types>
-        <members>C501_Contact_Merge__c</members>
-        <members>C501_Merge_Metric__c</members>
-        <name>CustomObject</name>
-    </types>
-    <types>
         <members>Account-C501 Household SM Lightning Layout</members>
         <name>Layout</name>
     </types>
