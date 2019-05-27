@@ -43,6 +43,7 @@ public class C501_SM_UnMerge_Controller {
         // Create new households so each household has a single service household
         Map<Id, Account> newHouseholds = new Map<Id, Account>();
         Id skippedServiceHouseholdId = null;
+        Integer uniqueIndex = 0;
         for (C501_Service_Household__c serviceHousehold :serviceHouseholds) {
 
             if (skippedServiceHouseholdId == null) {
@@ -54,7 +55,7 @@ public class C501_SM_UnMerge_Controller {
                 serviceHousehold.Id,
                 new Account(
                     Name = serviceHousehold.Name,
-                    C501_Service_Id__c = serviceHousehold.C501_Service_Id__c));
+                    C501_Service_Id__c = serviceHousehold.C501_Service_Id__c + String.valueOf(uniqueIndex++)));
         }
 
         if (!newHouseholds.values().isEmpty()) {
