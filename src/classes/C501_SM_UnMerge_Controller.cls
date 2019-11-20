@@ -238,7 +238,9 @@ public class C501_SM_UnMerge_Controller {
                 accountId,
                 new Account(
                     Id = accountId,
-                    Name = unMergeAccount.Name
+                    Name = unMergeAccount.Name,
+                    // Custom Naming - set to blank to make sure NPSP Settings - Refresh household Names bulk action works
+                    npo02__SYSTEM_CUSTOM_NAMING__c = ''
             ));
         }
 
