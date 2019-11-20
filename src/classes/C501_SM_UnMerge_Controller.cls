@@ -33,8 +33,11 @@ public class C501_SM_UnMerge_Controller {
         //
         String strSoql = 'SELECT Id, Name, C501_Household__c, C501_Service_Id__c';
         strSoql += ' FROM C501_Service_Household__c';
-        strSoql += ' WHERE C501_Household__c = \'' + String.valueOf(unMergeAccount.Id) + '\' and (NOT Name like \'Change Request%\')';
+        strSoql += ' WHERE C501_Household__c = \'' + String.valueOf(unMergeAccount.Id) + '\'';
+        strSoql += ' AND (NOT Name like \'Change Request%\')';
+        strSoql += ' AND C501_Program__c <> \'Information & Referral\'';
         strSoql += ' ORDER BY C501_Start_Date__c DESC';
+
         System.debug(LoggingLevel.DEBUG, '*****C501_SM_UnMerge_Controller::UnMergeServiceHouseholds strSoql: ' + strSoql);
 
         Map<Id, C501_Service_Household__c> serviceHouseholdsMap = new Map<Id, C501_Service_Household__c>();
@@ -87,12 +90,93 @@ public class C501_SM_UnMerge_Controller {
         return updateServiceHouseholds;
     }
 
+    private void CheckOrphanedContacts(Account unMergeAccount) {
+
+        // Get related Service Households
+        //
+        String strSoql = 'SELECT Id';
+        strSoql += ' FROM C501_Service_Household__c';
+        strSoql += ' WHERE C501_Household__c = \'' + String.valueOf(unMergeAccount.Id) + '\'';
+        strSoql += ' AND (NOT Name like \'Change Request%\')';
+        strSoql += ' AND C501_Program__c <> \'Information & Referral\'';
+        strSoql += ' ORDER BY C501_Start_Date__c DESC';
+
+        System.debug(LoggingLevel.DEBUG, '*****C501_SM_UnMerge_Controller::CheckOrphanedContacts C501_Service_Household__c strSoql: ' + strSoql);
+
+        List<Id> serviceHouseholdIds = new List<Id>();
+        for (C501_Service_Household__c serviceHousehold : Database.Query(strSoql)) {
+            serviceHouseholdIds.add(serviceHousehold.Id);
+        }
+
+        if (serviceHouseholdIds.isEmpty()) {
+            return;
+        }
+
+        String safeSoqlList = '(\'' + String.join(serviceHouseholdIds, '\',\'') + '\')';
+
+        // Get related Service Contacts
+        //
+        strSoql = 'SELECT C501_Contact__c ';
+        strSoql += ' FROM C501_Service_Contact__c';
+        strSoql += ' WHERE C501_Service_Household_Id__c in ' + safeSoqlList;
+        strSoql += ' ORDER BY CreatedDate DESC';
+
+        System.debug(LoggingLevel.DEBUG, '*****C501_SM_UnMerge_Controller::CheckOrphanedContacts C501_Service_Contact__c strSoql: ' + strSoql);
+
+        Set<Id> contactIds = new Set<Id>();
+        for (C501_Service_Contact__c serviceContact : Database.Query(strSoql)) {
+            contactIds.add(serviceContact.C501_Contact__c);
+        }
+
+        // Get related Service Contacts
+        //
+        strSoql = 'SELECT Id ';
+        strSoql += ' FROM Contact';
+        strSoql += ' WHERE AccountId = \'' + unMergeAccount.Id + '\'';
+
+        System.debug(LoggingLevel.DEBUG, '*****C501_SM_UnMerge_Controller::CheckOrphanedContacts Contact strSoql: ' + strSoql);
+
+        List<Contact> deleteContacts = new List<Contact>();
+        List<Id> deleteContactIds = new List<Id>();
+        for (Contact contactRecord : Database.Query(strSoql)) {
+            if (!contactIds.contains(contactRecord.Id)) {
+                deleteContactIds.add(contactRecord.Id);
+                deleteContacts.add(contactRecord);
+            }
+        }
+
+        if (!deleteContacts.isEmpty()) {
+
+            safeSoqlList = '(\'' + String.join(deleteContactIds, '\',\'') + '\')';
+
+            // Get related Service Contacts
+            //
+            strSoql = 'SELECT Id ';
+            strSoql += ' FROM C501_Service_Contact__c';
+            strSoql += ' WHERE C501_Contact__c in ' + safeSoqlList;
+
+            System.debug(LoggingLevel.DEBUG, '*****C501_SM_UnMerge_Controller::CheckOrphanedContacts deleteServiceContacts strSoql: ' + strSoql);
+
+            List<C501_Service_Contact__c> deleteServiceContacts = Database.Query(strSoql);
+            if (!deleteServiceContacts.isEmpty()) {
+                System.debug(LoggingLevel.DEBUG, '*****C501_SM_UnMerge_Controller::CheckOrphanedContacts deleteServiceContacts: ' + deleteServiceContacts);
+                delete deleteServiceContacts;
+            }
+
+            System.debug(LoggingLevel.DEBUG, '*****C501_SM_UnMerge_Controller::CheckOrphanedContacts deleteContacts: ' + deleteContacts);
+            delete deleteContacts;
+        }
+    }
+
     //
     //  UnMergeServiceContacts
     //      params: serviceHouseholds - list of all service households that were created during the unmerge
     //      return: void
     //
     private void UnMergeServiceContacts(Account unMergeAccount, List<C501_Service_Household__c> serviceHouseholds) {
+
+        // Check orphaned contacts - no service contact related to service programs
+        this.CheckOrphanedContacts(unMergeAccount);
 
         if (serviceHouseholds.isEmpty()) {
             return;
@@ -113,6 +197,7 @@ public class C501_SM_UnMerge_Controller {
         strSoql += ' FROM C501_Service_Contact__c';
         strSoql += ' WHERE C501_Service_Household_Id__c in ' + safeSoqlList;
         strSoql += ' ORDER BY CreatedDate DESC';
+
         System.debug(LoggingLevel.DEBUG, '*****C501_SM_UnMerge_Controller::UnMergeServiceContacts strSoql: ' + strSoql);
 
         Map<Id, C501_Service_Contact__c> serviceContactsMap = new Map<Id, C501_Service_Contact__c>();
@@ -177,5 +262,8 @@ public class C501_SM_UnMerge_Controller {
         if (!updateServiceContacts.isEmpty()) {
             update updateServiceContacts;
         }
+
+        // Check orphaned contacts - no service contact related to service programs
+        this.CheckOrphanedContacts(unMergeAccount);
     }    
 }
