@@ -51,13 +51,14 @@ public class C501_SM_UnMerge_Controller {
 
         // Create new households so each household has a single service household
         //
-        this.unMergeAccount.C501_Service_Id__c = null;
+        Boolean skippedMostRecentServiceHousehold = false;
         Map<Id, Account> insertHouseholds = new Map<Id, Account>();
         for (C501_Service_Household__c serviceHousehold :serviceHouseholdsMap.values()) {
 
-            // Keep the most recent Service Household on the incoming unmerge Account
-            if (this.unMergeAccount.C501_Service_Id__c == null) {
+            if (!skippedMostRecentServiceHousehold) {
+                skippedMostRecentServiceHousehold = true;
 
+                // Keep the most recent Service Household on the incoming unmerge Account
                 this.unMergeAccount.C501_Service_Id__c = serviceHousehold.Id;
                 update unMergeAccount;
 
@@ -68,7 +69,7 @@ public class C501_SM_UnMerge_Controller {
                 serviceHousehold.Id,
                 new Account(
                     Name = unMergeAccount.Name,
-                    C501_Service_Id__c = serviceHousehold.Id));
+                    C501_Service_Id__c = serviceHousehold.C501_Service_Id__c));
         }
 
         if (!insertHouseholds.values().isEmpty()) {
@@ -97,7 +98,7 @@ public class C501_SM_UnMerge_Controller {
         String strSoql = 'SELECT Id';
         strSoql += ' FROM C501_Service_Household__c';
         strSoql += ' WHERE C501_Household__c = \'' + String.valueOf(unMergeAccount.Id) + '\'';
-        strSoql += ' AND (NOT Name like \'Change Request%\')';
+        strSoql += ' AND (NOT Name like \'%Change Request%\')';
         strSoql += ' AND C501_Program__c <> \'Information & Referral\'';
         strSoql += ' ORDER BY C501_Start_Date__c DESC';
 
@@ -123,9 +124,10 @@ public class C501_SM_UnMerge_Controller {
 
         System.debug(LoggingLevel.DEBUG, '*****C501_SM_UnMerge_Controller::CheckOrphanedContacts C501_Service_Contact__c strSoql: ' + strSoql);
 
-        Set<Id> contactIds = new Set<Id>();
+        // Get list of essential service contacts (e.g., related to a specific service and not a change request or service referral)
+        Set<Id> contactIdsWithEssentialServiceContacts = new Set<Id>();
         for (C501_Service_Contact__c serviceContact : Database.Query(strSoql)) {
-            contactIds.add(serviceContact.C501_Contact__c);
+            contactIdsWithEssentialServiceContacts.add(serviceContact.C501_Contact__c);
         }
 
         // Get related Service Contacts
@@ -139,7 +141,7 @@ public class C501_SM_UnMerge_Controller {
         List<Contact> deleteContacts = new List<Contact>();
         List<Id> deleteContactIds = new List<Id>();
         for (Contact contactRecord : Database.Query(strSoql)) {
-            if (!contactIds.contains(contactRecord.Id)) {
+            if (!contactIdsWithEssentialServiceContacts.contains(contactRecord.Id)) {
                 deleteContactIds.add(contactRecord.Id);
                 deleteContacts.add(contactRecord);
             }
@@ -161,6 +163,20 @@ public class C501_SM_UnMerge_Controller {
             if (!deleteServiceContacts.isEmpty()) {
                 System.debug(LoggingLevel.DEBUG, '*****C501_SM_UnMerge_Controller::CheckOrphanedContacts deleteServiceContacts: ' + deleteServiceContacts);
                 delete deleteServiceContacts;
+            }
+
+            // Get related Merge contact histories
+            //
+            strSoql = 'SELECT Id ';
+            strSoql += ' FROM C501_Merge_Contact_History__c';
+            strSoql += ' WHERE Contact__c in ' + safeSoqlList;
+
+            System.debug(LoggingLevel.DEBUG, '*****C501_SM_UnMerge_Controller::CheckOrphanedContacts deleteServiceContacts strSoql: ' + strSoql);
+
+            List<C501_Merge_Contact_History__c> deleteMergeContactHistories = Database.Query(strSoql);
+            if (!deleteMergeContactHistories.isEmpty()) {
+                System.debug(LoggingLevel.DEBUG, '*****C501_SM_UnMerge_Controller::CheckOrphanedContacts deleteMergeContactHistories: ' + deleteMergeContactHistories);
+                delete deleteMergeContactHistories;
             }
 
             System.debug(LoggingLevel.DEBUG, '*****C501_SM_UnMerge_Controller::CheckOrphanedContacts deleteContacts: ' + deleteContacts);
